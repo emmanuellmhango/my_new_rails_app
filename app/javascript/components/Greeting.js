@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { useDispatch, useSelector } from 'react-redux';
 import { addMessage } from './state/messageSlice';
-import './Greeting.css';
 
 const Greeting = () => {
   const dispatch = useDispatch();
@@ -12,15 +11,20 @@ const Greeting = () => {
   const fetchMessage = async () => {
     const response = await axios.get('http://127.0.0.1:5000/messeges');
     const { message } = response.data;
-    dispatch(addMessage(message));
+    return message;
   };
 
   useEffect(() => {
-    fetchMessage();
-  }, []);
+    const fetchGreetings = async () => {
+      const response = await fetchMessage();
+      dispatch(addMessage(response));
+    };
+
+    fetchGreetings();
+  }, [dispatch]);
 
   return (
-    <div className="container">
+    <div>
       <h1>{message}</h1>
     </div>
   );
